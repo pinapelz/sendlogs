@@ -61,7 +61,8 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
     PROBLEMS,WARNINGS
     */
     if (cleanLogLine.includes("W:SuperstepSound: Audio device is not available!!!")){
-      let description = "Prevents the game from booting, as it cannot find a suitable audio device.\n\n";
+      let description = cleanLogLine
+      description += "\n\nPrevents the game from booting, as it cannot find a suitable audio device.\n\n";
       description += "Recommendation(s)\n\n"
       description += "1. Verify which audio mode your game is currently set to use.\n";
       description += "2. Ensure your default audio device is set to the correct sample rate for your selected audio mode.\n";
@@ -72,6 +73,15 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
         type: 'error',
         title: "No compatible audio device found.",
         description: description
+      });
+    }
+
+    if(cleanLogLine.includes("EXCEPTION_INT_DIVIDE_BY_ZERO")){
+      entries.push({
+        id: entries.length + 1,
+        type: 'error',
+        title: "EXCEPTION_INT_DIVIDE_BY_ZERO Raised",
+        description: "Try disabling some of your patches"
       });
     }
 
