@@ -70,7 +70,7 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
       entries.push({
         id: entries.length + 1,
         type: 'error',
-        title: "Prevents the game from booting, as it cannot find a suitable audio device.",
+        title: "No compatible audio device found.",
         description: description
       });
     }

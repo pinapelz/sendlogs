@@ -49,11 +49,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       <div
         className={`
           relative overflow-hidden
-          bg-zinc-800 border-2 border-dashed border-zinc-600 rounded-xl p-12 text-center 
+          bg-zinc-800 border-2 border-dashed border-zinc-600 rounded-xl p-12 text-center
           transition-all duration-300 ease-in-out
           hover:border-zinc-500 hover:bg-zinc-750
-          ${dragActive 
-            ? 'border-purple-500 bg-purple-500/10 shadow-lg shadow-purple-500/25' 
+          ${dragActive
+            ? 'border-purple-500 bg-purple-500/10 shadow-lg shadow-purple-500/25'
             : 'hover:shadow-md'
           }
         `}
@@ -65,7 +65,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         {dragActive && (
           <div className="absolute inset-0 bg-gradient-radial from-purple-500/20 via-transparent to-transparent pointer-events-none" />
         )}
-        
+
         <div className="relative z-10">
           <div className="text-6xl mb-4">📁</div>
           <h3 className="text-xl font-semibold text-white mb-2">
@@ -74,7 +74,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           <p className="text-zinc-400 mb-6">
             Or click to browse and select files
           </p>
-          
+
           <input
             type="file"
             onChange={handleInputChange}
@@ -82,11 +82,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({
             className="hidden"
             id="file-upload"
           />
-          
+
           <button
             onClick={handleButtonClick}
             className="
-              inline-block bg-gradient-to-r from-purple-500 to-purple-600 
+              inline-block bg-gradient-to-r from-purple-500 to-purple-600
               text-white px-6 py-3 rounded-lg font-semibold
               transition-all duration-200 ease-in-out
               hover:from-purple-600 hover:to-purple-700 hover:-translate-y-0.5 hover:shadow-lg
@@ -97,10 +97,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           >
             Choose File
           </button>
-          
-          <p className="text-sm text-zinc-500 mt-4">
-            Supports .log, .txt, and .out files
-          </p>
+
         </div>
       </div>
     </div>
