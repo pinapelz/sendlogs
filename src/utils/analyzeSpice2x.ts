@@ -355,7 +355,7 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
 
   // POST CHECKS -> After seeing all lines
   if(globalSoftId.startsWith("LDJ") && globalPatchVersion.includes("(010)") && !globalLaunchParams.includes("-iidxtdj")){
-    let description = "You're using a 010 (TDJ) DLL but haven't enabled TDJ mode in spice2x.\n"
+    let description = "You're using a 010 (TDJ) DLL but haven't enabled TDJ mode in spice2x. Ignore this if your game is patched to run in LDJ\n"
     description += "This will prevent the game from booting.\n\n"
     description += "--------------- Recommendations ---------------\n\n"
     description += "If your monitor supports 120Hz:\n\n"
@@ -369,7 +369,7 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
     description += "Info on patching: https://ttwr.moekyun.me/extras/patchsp2x/"
     entries.push({
       id: entries.length+1,
-      type: 'error',
+      type: 'warning',
       title: "TDJ Mode Configuration Required",
       description
     });
