@@ -86,7 +86,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           <button
             onClick={handleButtonClick}
             className="
-              inline-block bg-gradient-to-r from-purple-500 to-purple-600
+              inline-block bg-linear-to-r from-purple-500 to-purple-600
               text-white px-6 py-3 rounded-lg font-semibold
               transition-all duration-200 ease-in-out
               hover:from-purple-600 hover:to-purple-700 hover:-translate-y-0.5 hover:shadow-lg

@@ -112,14 +112,26 @@ interface FileContentViewerProps {
   file: File
 }
 
+interface FileContentViewerProps {
+  file: File
+  encoding?: string
+}
+
 export const FileContentViewer: React.FC<FileContentViewerProps> = ({
   file,
+  encoding = 'utf-8'
 }) => {
   const [content, setContent] = useState<string>('')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [matchingLines, setMatchingLines] = useState<number[]>([])
+  const [selectedEncoding, setSelectedEncoding] = useState<string>(encoding)
+
+  const encodingOptions = [
+    { value: 'utf-8', label: 'UTF-8' },
+    { value: 'shift_jis', label: 'SHIFT_JIS (use for spice2x)' }
+  ]
 
   useEffect(() => {
     const readFile = async () => {
@@ -127,7 +139,9 @@ export const FileContentViewer: React.FC<FileContentViewerProps> = ({
         setIsLoading(true)
         setError(null)
 
-        const text = await file.text()
+        const arrayBuffer = await file.arrayBuffer()
+        const decoder = new TextDecoder(selectedEncoding)
+        const text = decoder.decode(arrayBuffer)
         setContent(text)
       } catch (err) {
         setError('Failed to read file content')
@@ -138,7 +152,7 @@ export const FileContentViewer: React.FC<FileContentViewerProps> = ({
     }
 
     readFile()
-  }, [file])
+  }, [file, selectedEncoding])
 
   useEffect(() => {
     const lines = content.split('\n')
@@ -206,6 +220,27 @@ export const FileContentViewer: React.FC<FileContentViewerProps> = ({
           ) : (
             `${lines.length.toLocaleString()} lines`
           )}
+        </div>
+      </div>
+
+      {/* Encoding Selector */}
+      <div className="mb-4">
+        <div className="flex items-center gap-3">
+          <label htmlFor="encoding-select" className="text-sm text-zinc-400">
+            Encoding:
+          </label>
+          <select
+            id="encoding-select"
+            value={selectedEncoding}
+            onChange={(e) => setSelectedEncoding(e.target.value)}
+            className="bg-zinc-700 border border-zinc-600 rounded px-3 py-1 text-white text-sm focus:outline-none focus:border-purple-500"
+          >
+            {encodingOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
