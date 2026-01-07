@@ -53,6 +53,7 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
   const globalDataLoadErrors = [];
   const globalPatchesUsed = [];
   let BadDataWarning = false;
+  let is64Bit = true;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -74,6 +75,15 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
         type: 'error',
         title: "No compatible audio device found.",
         description: description
+      });
+    }
+
+    if(cleanLogLine.includes("EXCEPTION_ACCESS_VIOLATION")){
+      entries.push({
+        id: entries.length + 1,
+        type: 'error',
+        title: "EXCEPTION_ACCESS_VIOLATION Raised",
+        description: "If you have RTSS or Afterburner installed, please shut them down before launching."
       });
     }
 
@@ -143,6 +153,9 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
 
     else if (cleanLogLine.startsWith("I:launcher:")) {
       const launcherInfo = cleanLogLine.replace("I:launcher: ", "").trim();
+      if(cleanLogLine.includes("SpiceTools Bootstrap (x32)")){
+        is64Bit = false;
+      }
       const versionRegex = /^\d+\.\d+-V-\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
       const dateMatch = launcherInfo.match(/\d{4}-\d{2}-\d{2}/);
       const extractedDate = dateMatch ? dateMatch[0] : "Unknown Spice2x Version";
@@ -233,6 +246,18 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
 
       i = j;
     }
+
+    else if(cleanLogLine.startsWith("I:avs-game: loaded successfully")){
+      if(is64Bit && !cleanLogLine.includes("0x180000000")){
+        entries.push({
+          id: entries.length + 1,
+          type: 'warning',
+          title: "Unexpected Load Address",
+          description: "The game was loaded at an unexpected address, which may cause issues with some aspects of the game. If you have RTSS or Afterburner installed, please shut them down before launching"
+        });
+      }
+    }
+
 
     else if(cleanLogLine.startsWith("W:CtrlSound:")){
       const pattern = /^Voice\[\d+\] of Bank\[\d+\] is not loaded\.$/
