@@ -153,6 +153,21 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
           title: "spice2x Version",
           description: extractedDate
         });
+
+        const response = await fetch("https://api.github.com/repos/spice2x/spice2x.github.io/releases/latest");
+        if(!response.ok){
+          continue;
+        }
+        const extractedDateTag = extractedDate.slice(2);
+        const spice2xGHData: any = await response.json();
+        if(spice2xGHData["tag_name"] != extractedDateTag){
+          entries.push({
+            id: 1,
+            type: 'warning',
+            title: "spice2x version does not match the latest stable build",
+            description: "If you experience issues, you should first update to the latest version of spice2x ("+spice2xGHData["tag_name"] + ")"
+          });
+        }
       } else if (launcherInfo === "arguments:") {
         const launch_args: string[] = [];
         let j = i + 1;
