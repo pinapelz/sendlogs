@@ -83,7 +83,7 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
         id: entries.length + 1,
         type: 'error',
         title: "EXCEPTION_ACCESS_VIOLATION Raised",
-        description: "If you have RTSS or Afterburner installed, please shut them down before launching."
+        description: "If you have RTSS or Afterburner installed, please shut them down before launching. If you have another issue, try to solve that first and this may be resolved."
       });
     }
 
