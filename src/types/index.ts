@@ -1,6 +1,6 @@
 export type IssueType = 'error' | 'warning' | 'suggestion'
 export type InfoType = 'info'
-export type LogType = 'SPICE2X' | 'UNKNOWN'
+export type LogType = 'SPICE2X' | 'UNKNOWN' | 'SPICETOOLS'
 
 export interface LogIssue {
   id: number

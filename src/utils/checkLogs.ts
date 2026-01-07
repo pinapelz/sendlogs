@@ -29,5 +29,6 @@ export const findLogFileType = async (file: File): Promise<{type: LogType, lineC
   const lineCount = fileContents.split('\n').length;
   const firstLine = fileContents.split('\n')[0];
   if(firstLine.includes('spice2x')) return {type: "SPICE2X", lineCount};
+  if(firstLine.includes('SpiceTools')) return {type: "SPICETOOLS", lineCount};
   return {type: "UNKNOWN", lineCount}
 }

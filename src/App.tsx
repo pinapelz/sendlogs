@@ -13,6 +13,12 @@ function App() {
 
   const handleFileUpload = useCallback(async (file: File) => {
     const logMetadata = await findLogFileType(file)
+
+    if(logMetadata.type === "SPICETOOLS") {
+      alert('SpiceTools is deprecated and unsupported. Use spice2x instead https://spice2x.github.io/')
+      return
+    }
+
     if (!logMetadata || logMetadata.type === "UNKNOWN") {
       alert('Unknown Log Format')
       return
