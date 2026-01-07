@@ -52,6 +52,7 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
   const globalLaunchParams = [];
   const globalDataLoadErrors = [];
   const globalPatchesUsed = [];
+  let BadDataWarning = false;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -86,7 +87,7 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
     }
 
     if(cleanLogLine.includes("F:afpu-heap: malloc failed size=428088")){
-      let description = "In spice2x config try setting Heap Size (-h) to 201326592"
+      const description = "In spice2x config try setting Heap Size (-h) to 201326592"
       entries.push({
         id: entries.length + 1,
         type: 'error',
@@ -96,7 +97,7 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
     }
 
     if(cleanLogLine.includes("W:ea3-pos: ea3_report_posev: no such node: /coin/kfc_game_s_standard_plus")){
-      let description = "You may need to edit your ea3-config.xml, see the following for a fix: https://github.com/22vv0/asphyxia_plugins/releases/tag/kfc-6.1.0b"
+      const description = "You may need to edit your ea3-config.xml, see the following for a fix: https://github.com/22vv0/asphyxia_plugins/releases/tag/kfc-6.1.0b"
       entries.push({
         id: entries.length + 1,
         type: 'warning',
@@ -122,7 +123,7 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
         id: entries.length + 1,
         type: 'error',
         title: "CPU does not support a necessary instruction",
-        description: " "
+        description: description
       });
     }
 
@@ -218,9 +219,22 @@ export const analyzeSpice2xLogs = async (file: File): Promise<LogEntry[]> => {
       i = j;
     }
 
+    else if(cleanLogLine.startsWith("W:CtrlSound:")){
+      const pattern = /^Voice\[\d+\] of Bank\[\d+\] is not loaded\.$/
+      if(pattern.test(cleanLogLine) && !BadDataWarning){
+        let description = "You are missing necessary files, you may be able to continue playing but this may cause issues with some aspects of the game\n\n"
+        description += cleanLogLine
+        BadDataWarning = true;
+        entries.push({
+          id: entries.length + 1,
+          type: 'warning',
+          title: "Data is Incomplete",
+          description: description
+        })
+      }
+    }
     else if(cleanLogLine.includes("指定したレイヤーは存在しません") ||
             cleanLogLine.includes("W:CTexture: no such texture:")){
-      console.log(cleanLogLine);
       globalDataLoadErrors.push(cleanLogLine);
     }
 
